@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Already Read Books</title>
+    <style>
+        /* Basic styling */
+        body { font-family: Arial, sans-serif; background-color: #faf3e0; color: #333; text-align: center; padding: 20px; }
+        .book-card { background-color: #fff; border-radius: 10px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); margin: 10px; padding: 10px; }
+        .remove-button { padding: 5px 10px; font-size: 0.8rem; color: #fff; background-color: #ff6542; border: none; border-radius: 5px; cursor: pointer; }
+        a { color: #cc5803; text-decoration: none; }
+    </style>
+</head>
+<body>
+    <h1>Already Read Books 📖</h1>
+    <a href="toberead.html">Back to To-Be-Read List</a>
+    <div id="alreadyReadGallery"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', loadAlreadyReadBooks);
+
+        function loadAlreadyReadBooks() {
+            const alreadyReadBooks = JSON.parse(localStorage.getItem('alreadyReadBooks')) || [];
+            const gallery = document.getElementById('alreadyReadGallery');
+
+            alreadyReadBooks.forEach(book => {
+                const bookCard = document.createElement('div');
+                bookCard.className = 'book-card';
+
+                const bookTitle = document.createElement('h3');
+                bookTitle.textContent = book.title;
+
+                const bookAuthor = document.createElement('p');
+                bookAuthor.textContent = `by ${book.author}`;
+
+                const removeButton = document.createElement('button');
+                removeButton.className = 'remove-button';
+                removeButton.textContent = 'Remove';
+                removeButton.addEventListener('click', () => removeBook(book.title, bookCard));
+
+                bookCard.appendChild(bookTitle);
+                bookCard.appendChild(bookAuthor);
+                bookCard.appendChild(removeButton);
+                gallery.appendChild(bookCard);
+            });
+        }
+
+        function removeBook(title, bookCard) {
+            if (confirm(`Are you sure you want to remove "${title}" from your Already Read list?`)) {
+                let alreadyReadBooks = JSON.parse(localStorage.getItem('alreadyReadBooks')) || [];
+                alreadyReadBooks = alreadyReadBooks.filter(book => book.title !== title);
+                localStorage.setItem('alreadyReadBooks', JSON.stringify(alreadyReadBooks));
+                bookCard.remove(); // Remove the card from the display
+            }
+        }
+    </script>
+</body>
+</html>
